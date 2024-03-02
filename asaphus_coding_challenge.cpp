@@ -110,6 +110,21 @@ int get_least_weight_box_index(const std::vector<std::unique_ptr<Box> >& boxes) 
 
 double green_box_score(const std::unique_ptr<Box>& box) {
     double score;
+
+    try{
+    std::vector<double> boxWeights = box->getBoxWeights();
+    
+    if (boxWeights.size() < 3) {
+        score = pow((std::accumulate(boxWeights.begin(), boxWeights.end(), 0.0) / boxWeights.size()), 2); //when boxWeights contains less than 3 elements mean of all
+
+    }
+    else {
+        score = pow((std::accumulate(boxWeights.end() - 3, boxWeights.end(), 0.0) / 3), 2); // when boxWeights contains more than 3 elements mean of last 3 weights
+    }
+    } catch(const std::exception& e){
+      std::cerr <<"Exception caught"<< e.what() <<std::endl;
+    }
+    
     return score;
 }
 
