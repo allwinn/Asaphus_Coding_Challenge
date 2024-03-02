@@ -63,7 +63,7 @@ class Box {
   void addToBoxWeights(double value) {
   boxWeights.push_back(value); //push last weight absorbed to the boxWeights vector
   }
-  
+
  protected:
   double weight_;
   std::vector<double> boxWeights; //vector for tracking all weights absorbed
@@ -81,14 +81,79 @@ std::unique_ptr<Box> Box::makeBlueBox(double initial_weight){
     return std::make_unique<Box>(initial_weight);
   }
 
+//Function for identiyfying the box with the least weight 
+int get_least_weight_box_index(const std::vector<std::unique_ptr<Box> >& boxes) {
+  
+   int index;
+   double min_weight=std::numeric_limits<double>::infinity();
+
+   try{
+
+    if(!boxes){
+      throw std::runtime_error("Null Pointer reference");
+    }
+   
+   for (int i = 0; i < boxes.size(); i++) {
+       if(boxes[i]->getWeight()<min_weight){
+            min_weight=boxes[i]->getWeight();
+            index=i;
+     }
+
+   }
+   } catch (const std::exception& e){
+
+    std::cerr<< "Exception caught"<< e.what()<<std::endl; 
+   }
+   
+    return index;
+}
+
+double green_box_score(const std::unique_ptr<Box>& box) {
+    double score;
+    return score;
+}
+
+double blue_box_score(const std::unique_ptr<Box>& box) {
+    double score;
+    return score;
+}
 
 class Player {
  public:
   void takeTurn(uint32_t input_weight,
                 const std::vector<std::unique_ptr<Box> >& boxes) {
     // TODO
+
+    int boxIndex;
+    double currentScore;
+
+    boxIndex=get_least_weight_box_index(boxes); //get index of the box with least weight
+
+    boxes[boxIndex]->addToBoxWeights(input_weight); //add the current weight to the boxWeights array 
+    boxes[boxIndex]->setWeight(input_weight); //update the weight of the current selected box
+
+    if (boxIndex == 0 || boxIndex == 1) {
+        //call the green box score funcion
+        
+        currentScore = green_box_score(boxes[boxIndex]);
+        
+    }
+    else if (boxIndex == 2 || boxIndex == 3){
+        //call the blue box score function
+        
+        currentScore = blue_box_score(boxes[boxIndex]);
+    }
+    else {
+        std::cout << "Invalid Box Index" << boxIndex;
+    }
+
+    setScore(currentScore);     
+     
   }
   double getScore() const { return score_; }
+  void setScore(double currentScore){
+     score_ += currentScore;
+  }
 
  private:
   double score_{0.0};
