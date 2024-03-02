@@ -89,8 +89,8 @@ int get_least_weight_box_index(const std::vector<std::unique_ptr<Box> >& boxes) 
 
    try{
 
-    if(!boxes){
-      throw std::runtime_error("Null Pointer reference");
+    if(boxes.empty()){
+      throw std::runtime_error("Empty Vector");
     }
    
    for (int i = 0; i < boxes.size(); i++) {
@@ -128,8 +128,40 @@ double green_box_score(const std::unique_ptr<Box>& box) {
     return score;
 }
 
+//Cantor pairing Function 
+double resultCantorPairing(int num1, int num2) {
+    return ((((num1+num2)*(num1+num2+1))/2)+num2); //cantorPairing(a,b)=((a+b)*(a+b+1)/2)+b
+}
+
 double blue_box_score(const std::unique_ptr<Box>& box) {
     double score;
+
+  try{
+    std::vector<double> boxWeights = box->getBoxWeights();
+    double smallestWeight = boxWeights[0];
+    double largestWeight = boxWeights[0];
+
+    if (boxWeights.size() == 1) {
+        score = resultCantorPairing(smallestWeight, largestWeight); // when only one weight is absorbed same weight is used as smallest and largest.
+    }
+    else {
+        for (double weight :boxWeights) {
+            if (weight < smallestWeight) {
+                smallestWeight = weight;
+            }
+            
+            if (weight > largestWeight) {
+                largestWeight = weight;
+            }  
+    }
+        score = resultCantorPairing(smallestWeight, largestWeight); //cantorPairing with the smallest and largest absorbed Weights
+    
+    }
+
+  }catch(const std::exception& e){
+      std::cerr <<"Exception caught"<< e.what() <<std::endl;
+  }
+
     return score;
 }
 
