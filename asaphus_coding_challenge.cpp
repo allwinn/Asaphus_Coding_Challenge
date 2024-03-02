@@ -56,11 +56,31 @@ class Box {
 
   // TODO
 
+  double getWeight() const { return weight_; }  //returns the current weight absorbed
+  void setWeight(double currentWeight) { weight_ += currentWeight; } //update the last weight absorbed 
+
+  std::vector<double>& getBoxWeights()  { return boxWeights; } 
+  void addToBoxWeights(double value) {
+  boxWeights.push_back(value); //push last weight absorbed to the boxWeights vector
+  }
+  
  protected:
   double weight_;
+  std::vector<double> boxWeights; //vector for tracking all weights absorbed
 };
 
 // TODO
+
+std::unique_ptr<Box> Box::makeGreenBox(double initial_weight){
+
+    return std::make_unique<Box>(initial_weight);
+  }
+
+std::unique_ptr<Box> Box::makeBlueBox(double initial_weight){
+
+    return std::make_unique<Box>(initial_weight);
+  }
+
 
 class Player {
  public:
@@ -82,6 +102,18 @@ std::pair<double, double> play(const std::vector<uint32_t>& input_weights) {
   boxes.emplace_back(Box::makeBlueBox(0.3));
 
   // TODO
+
+  Player player_A, player_B;
+
+  for (int i = 0; i < input_weights.size(); i++){
+      if (i % 2 == 0) {
+          player_A.takeTurn(input_weights[i],boxes);
+      }
+      else {
+          player_B.takeTurn(input_weights[i],boxes);
+      }
+  
+  }
 
   std::cout << "Scores: player A " << player_A.getScore() << ", player B "
             << player_B.getScore() << std::endl;
