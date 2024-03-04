@@ -50,15 +50,20 @@
 
 class Box {
  public:
-  explicit Box(double initial_weight) : weight_(initial_weight) {}
-  static std::unique_ptr<Box> makeGreenBox(double initial_weight);
-  static std::unique_ptr<Box> makeBlueBox(double initial_weight);
+  explicit Box(double initial_weight,const std::string& color) : weight_(initial_weight){
+   
+    setBoxColor(color);}
+  static std::unique_ptr<Box> makeGreenBox(double initial_weight,const std::string& color);
+  static std::unique_ptr<Box> makeBlueBox(double initial_weight,const std::string& color);
   bool operator<(const Box& rhs) const { return weight_ < rhs.weight_; }
-
+  
   // TODO
 
   double getWeight() const { return weight_; }  //returns the current weight absorbed
   void setWeight(double currentWeight) { weight_ += currentWeight; } //update the last weight absorbed 
+
+  std::string getBoxColor() const { return boxColor; }  //returns the color of the current box
+  void setBoxColor(const std::string& color) { boxColor = color; } //sets the color of the current box
 
   std::vector<double>& getBoxWeights()  { return boxWeights; } 
   void addToBoxWeights(double value) {
@@ -68,19 +73,24 @@ class Box {
  protected:
   double weight_;
   std::vector<double> boxWeights; //vector for tracking all weights absorbed
+   std::string boxColor;
 };
 
 // TODO
 
-std::unique_ptr<Box> Box::makeGreenBox(double initial_weight){
+std::unique_ptr<Box> Box::makeGreenBox(double initial_weight,const std::string& color){
 
-    return std::make_unique<Box>(initial_weight);
+    
+    return std::make_unique<Box>(initial_weight,"green");
   }
 
-std::unique_ptr<Box> Box::makeBlueBox(double initial_weight){
+std::unique_ptr<Box> Box::makeBlueBox(double initial_weight,const std::string& color){
 
-    return std::make_unique<Box>(initial_weight);
+    
+    return std::make_unique<Box>(initial_weight,"blue");
   }
+
+
 
 //Function for identiyfying the box with the least weight 
 int get_least_weight_box_index(const std::vector<std::unique_ptr<Box> >& boxes) {
@@ -174,25 +184,26 @@ class Player {
 
     int boxIndex;
     double currentScore;
-
+    std::string boxColor;
     boxIndex=get_least_weight_box_index(boxes); //get index of the box with least weight
 
+    boxColor=boxes[boxIndex]->getBoxColor();
     boxes[boxIndex]->addToBoxWeights(input_weight); //add the current weight to the boxWeights array 
     boxes[boxIndex]->setWeight(input_weight); //update the weight of the current selected box
 
-    if (boxIndex == 0 || boxIndex == 1) {
+    if (boxColor=="green") {
         //call the green box score funcion
         
         currentScore = green_box_score(boxes[boxIndex]);
         
     }
-    else if (boxIndex == 2 || boxIndex == 3){
+    else if (boxColor=="blue"){
         //call the blue box score function
         
         currentScore = blue_box_score(boxes[boxIndex]);
     }
     else {
-        std::cout << "Invalid Box Index" << boxIndex;
+        std::cout << "Invalid Box color" << boxColor;
     }
 
     setScore(currentScore);     
@@ -209,10 +220,10 @@ class Player {
 
 std::pair<double, double> play(const std::vector<uint32_t>& input_weights) {
   std::vector<std::unique_ptr<Box> > boxes;
-  boxes.emplace_back(Box::makeGreenBox(0.0));
-  boxes.emplace_back(Box::makeGreenBox(0.1));
-  boxes.emplace_back(Box::makeBlueBox(0.2));
-  boxes.emplace_back(Box::makeBlueBox(0.3));
+  boxes.emplace_back(Box::makeGreenBox(0.0,"green"));
+    boxes.emplace_back(Box::makeGreenBox(0.1,"green"));
+    boxes.emplace_back(Box::makeBlueBox(0.2,"blue"));
+    boxes.emplace_back(Box::makeBlueBox(0.3,"blue"));
 
   // TODO
 
@@ -238,10 +249,10 @@ std::pair<double, double> boxAbsorption(const std::vector<uint32_t>& input_weigh
     
     std::vector<double> finalWeights;
     std::vector<std::unique_ptr<Box> > boxes;
-    boxes.emplace_back(Box::makeGreenBox(0.0));
-    boxes.emplace_back(Box::makeGreenBox(0.1));
-    boxes.emplace_back(Box::makeBlueBox(0.2));
-    boxes.emplace_back(Box::makeBlueBox(0.3));
+    boxes.emplace_back(Box::makeGreenBox(0.0,"green"));
+    boxes.emplace_back(Box::makeGreenBox(0.1,"green"));
+    boxes.emplace_back(Box::makeBlueBox(0.2,"blue"));
+    boxes.emplace_back(Box::makeBlueBox(0.3,"blue"));
 
     Player player_A, player_B;
 
