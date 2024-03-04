@@ -275,11 +275,8 @@ std::pair<double, double> boxAbsorption(const std::vector<uint32_t>& input_weigh
             << boxes[3]->getWeight() << std::endl;
       return std::make_pair(boxes[2]->getWeight(),boxes[3]->getWeight());
     }
-    else{
-      return std::make_pair(0.0,0.0);
-    }
-
     
+    return std::make_pair(0.0,0.0);
 
 }
 
@@ -311,4 +308,46 @@ TEST_CASE("Test absorption of blue box", "[blue]") {
   auto result=boxAbsorption(inputs,"blue");
   REQUIRE(result.first == 2.2);
   REQUIRE(result.second == 3.3);
+}
+
+TEST_CASE("Final scores for first 4 Fibonacci numbers reversed", "[fibonacci4rev]") {
+  std::vector<uint32_t> inputs{3 ,2, 1, 1};
+  auto result = play(inputs);
+  REQUIRE(result.first == 13.0);
+  REQUIRE(result.second == 8.0);
+}
+
+TEST_CASE("Final scores for eight 1's", "[eight1s]") {
+  std::vector<uint32_t> inputs{1 ,1, 1, 1, 1 ,1, 1, 1};
+  auto result = play(inputs);
+  REQUIRE(result.first == 10.0);
+  REQUIRE(result.second == 10.0);
+}
+
+TEST_CASE("Final scores for first 4 odd numbers", "[odd4]") {
+  std::vector<uint32_t> inputs{1 ,3, 5, 7};
+  auto result = play(inputs);
+  REQUIRE(result.first == 61.0);
+  REQUIRE(result.second == 121.0);
+}
+
+TEST_CASE("Final scores for first 4 even numbers", "[even4]") {
+  std::vector<uint32_t> inputs{0, 2, 4, 6};
+  auto result = play(inputs);
+  REQUIRE(result.first == 16.0);
+  REQUIRE(result.second == 85.0);
+}
+
+TEST_CASE("Final scores for 0022", "[0022]") {
+  std::vector<uint32_t> inputs{0, 0, 3, 3};
+  auto result = play(inputs);
+  REQUIRE(result.first == 1);
+  REQUIRE(result.second == 9);
+}
+
+TEST_CASE("Final scores for 4 zeros", "[zeros4]") {
+  std::vector<uint32_t> inputs{0, 0, 0, 0};
+  auto result = play(inputs);
+  REQUIRE(result.first == 0.0);
+  REQUIRE(result.second == 0.0);
 }
